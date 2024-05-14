@@ -1,0 +1,107 @@
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER DATABASE courtlistener OWNER TO django;
+
+\connect courtlistener
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+SET default_tablespace = '';
+SET default_table_access_method = heap;
+
+----------------------------------- FOREIGN KEY  -----------------------------------------------------
+
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT a2a62b7d002101ae4c4663cdd1dfc075 FOREIGN KEY (originating_court_information_id) REFERENCES public.search_originatingcourtinformation(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.audio_audio ADD CONSTRAINT audio_audio_docket_id_625f3642919f8934_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.audio_audio_panel ADD CONSTRAINT audio_audio_pa_person_id_afbf0404cefafcc_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.audio_audio_panel ADD CONSTRAINT audio_audio_panel_audio_id_536de9ffa9ea04fa_fk_audio_audio_id FOREIGN KEY (audio_id) REFERENCES public.audio_audio(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_attorneyorganizationassociation ADD CONSTRAINT ef7a9c8bc08ab662925cfaa332ca9777 FOREIGN KEY (attorney_organization_id) REFERENCES public.people_db_attorneyorganization(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinioncluster_non_participating_judges ADD CONSTRAINT opinioncluster_id_3d4a71240680b64c_fk_search_opinioncluster_id FOREIGN KEY (opinioncluster_id) REFERENCES public.search_opinioncluster(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinioncluster_panel ADD CONSTRAINT opinioncluster_id_7cdb36cb8a6ff7a7_fk_search_opinioncluster_id FOREIGN KEY (opinioncluster_id) REFERENCES public.search_opinioncluster(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_d_appointer_id_7c550f3cea4ba6cd_fk_people_db_position_id FOREIGN KEY (appointer_id) REFERENCES public.people_db_position(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_school ADD CONSTRAINT people_d_is_alias_of_id_331b4e3cdac3b6f9_fk_people_db_school_id FOREIGN KEY (is_alias_of_id) REFERENCES public.people_db_school(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_person ADD CONSTRAINT people_d_is_alias_of_id_53a6eb8a5fb97b64_fk_people_db_person_id FOREIGN KEY (is_alias_of_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_d_predecessor_id_36032dfa6a12d44c_fk_people_db_person_id FOREIGN KEY (predecessor_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_attorneyorganizationassociation ADD CONSTRAINT people_db__attorney_id_1f7b59b220e86ae_fk_people_db_attorney_id FOREIGN KEY (attorney_id) REFERENCES public.people_db_attorney(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_role ADD CONSTRAINT people_db__attorney_id_1fd94ceb4f0ff93_fk_people_db_attorney_id FOREIGN KEY (attorney_id) REFERENCES public.people_db_attorney(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_abarating ADD CONSTRAINT people_db_aba_person_id_79eb41c300a4a376_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_attorneyorganizationassociation ADD CONSTRAINT people_db_attorn_docket_id_50e2b6b752e16618_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_education ADD CONSTRAINT people_db_edu_person_id_688c3a0acdae53a1_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_education ADD CONSTRAINT people_db_edu_school_id_33cc463e2249bc4a_fk_people_db_school_id FOREIGN KEY (school_id) REFERENCES public.people_db_school(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_partytype ADD CONSTRAINT people_db_party_party_id_1a614faa135be115_fk_people_db_party_id FOREIGN KEY (party_id) REFERENCES public.people_db_party(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_partytype ADD CONSTRAINT people_db_partyt_docket_id_30c09cafa20f361a_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_person_race ADD CONSTRAINT people_db_per_person_id_2483201f22b91c44_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_person_race ADD CONSTRAINT people_db_person__race_id_12bc59b989c779ea_fk_people_db_race_id FOREIGN KEY (race_id) REFERENCES public.people_db_race(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_politicalaffiliation ADD CONSTRAINT people_db_pol_person_id_7bca4351a3adeccb_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_db_pos_person_id_796c042ecbe82b71_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_db_pos_school_id_3cd91cb4ec26941a_fk_people_db_school_id FOREIGN KEY (school_id) REFERENCES public.people_db_school(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_db_position_court_id_7141eee9b516a894_fk_search_court_id FOREIGN KEY (court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_retentionevent ADD CONSTRAINT people_db_position_id_7aa450ceb6309890_fk_people_db_position_id FOREIGN KEY (position_id) REFERENCES public.people_db_position(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_role ADD CONSTRAINT people_db_role_docket_id_43aa88e5be806103_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_role ADD CONSTRAINT people_db_role_party_id_cc149ce69f8a224_fk_people_db_party_id FOREIGN KEY (party_id) REFERENCES public.people_db_party(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_source ADD CONSTRAINT people_db_sou_person_id_547e18a17ea79ec1_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_position ADD CONSTRAINT people_db_supervisor_id_5e670092b0c8d684_fk_people_db_person_id FOREIGN KEY (supervisor_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_criminalcount ADD CONSTRAINT people_party_type_id_3cd2208b7ab7f97f_fk_people_db_partytype_id FOREIGN KEY (party_type_id) REFERENCES public.people_db_partytype(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.people_db_criminalcomplaint ADD CONSTRAINT people_party_type_id_54695b07d9d95d41_fk_people_db_partytype_id FOREIGN KEY (party_type_id) REFERENCES public.people_db_partytype(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT s_idb_data_id_7696e442c56d310_fk_recap_fjcintegrateddatabase_id FOREIGN KEY (idb_data_id) REFERENCES public.recap_fjcintegrateddatabase(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_recapdocument_tags ADD CONSTRAINT se_recapdocument_id_3a0831353b326f45_fk_search_recapdocument_id FOREIGN KEY (recapdocument_id) REFERENCES public.search_recapdocument(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_recapdocument ADD CONSTRAINT searc_docket_entry_id_186f592b9e384e1e_fk_search_docketentry_id FOREIGN KEY (docket_entry_id) REFERENCES public.search_docketentry(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_originatingcourtinformation ADD CONSTRAINT searc_ordering_judge_id_143dbe040e3c8895_fk_people_db_person_id FOREIGN KEY (ordering_judge_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinionscited ADD CONSTRAINT search__citing_opinion_id_3b336c39ca8491ca_fk_search_opinion_id FOREIGN KEY (citing_opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinion ADD CONSTRAINT search__cluster_id_48646dd68699f5d6_fk_search_opinioncluster_id FOREIGN KEY (cluster_id) REFERENCES public.search_opinioncluster(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_bankruptcyinformation ADD CONSTRAINT search_bankruptcyinf_docket_id_91fa3275_fk_search_do FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_citation ADD CONSTRAINT search_c_cluster_id_c4f8720fbbbd050_fk_search_opinioncluster_id FOREIGN KEY (cluster_id) REFERENCES public.search_opinioncluster(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_claim ADD CONSTRAINT search_claim_docket_id_b37171a9_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_claim_tags ADD CONSTRAINT search_claim_tags_claim_id_2cf554b5_fk_search_claim_id FOREIGN KEY (claim_id) REFERENCES public.search_claim(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_claim_tags ADD CONSTRAINT search_claim_tags_tag_id_73b6bd4d_fk_search_tag_id FOREIGN KEY (tag_id) REFERENCES public.search_tag(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_claimhistory ADD CONSTRAINT search_claimhistory_claim_id_e130e572_fk_search_claim_id FOREIGN KEY (claim_id) REFERENCES public.search_claim(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_court_appeals_to ADD CONSTRAINT search_court_appeals_from_court_id_fb09cc1a_fk_search_co FOREIGN KEY (from_court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_court_appeals_to ADD CONSTRAINT search_court_appeals_to_to_court_id_49ac3d9c_fk_search_court_id FOREIGN KEY (to_court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_court ADD CONSTRAINT search_court_parent_court_id_51ba1d28_fk_search_court_id FOREIGN KEY (parent_court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_courthouse ADD CONSTRAINT search_courthouse_court_id_6528f572_fk_search_court_id FOREIGN KEY (court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT search_d_referred_to_id_7dfd6952e8d18b8c_fk_people_db_person_id FOREIGN KEY (referred_to_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT search_do_assigned_to_id_185a002e3102ceb_fk_people_db_person_id FOREIGN KEY (assigned_to_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT search_docke_appeal_from_id_71fecce427985eaf_fk_search_court_id FOREIGN KEY (appeal_from_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket_panel ADD CONSTRAINT search_docket__person_id_a216895387ce4ca_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket ADD CONSTRAINT search_docket_court_id_2d2438b2594e74ba_fk_search_court_id FOREIGN KEY (court_id) REFERENCES public.search_court(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket_panel ADD CONSTRAINT search_docket_pa_docket_id_6c92125a7941d19b_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket_tags ADD CONSTRAINT search_docket_ta_docket_id_22afc0b36b1bbca3_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docket_tags ADD CONSTRAINT search_docket_tags_tag_id_2f90416e21d2a5cc_fk_search_tag_id FOREIGN KEY (tag_id) REFERENCES public.search_tag(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docketentry ADD CONSTRAINT search_docketentr_docket_id_77c155ebbf826b3_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docketentry_tags ADD CONSTRAINT search_docketentry_id_48bcebf60f001801_fk_search_docketentry_id FOREIGN KEY (docketentry_id) REFERENCES public.search_docketentry(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_docketentry_tags ADD CONSTRAINT search_docketentry_tag_tag_id_6d9cf14285cf89c9_fk_search_tag_id FOREIGN KEY (tag_id) REFERENCES public.search_tag(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_originatingcourtinformation ADD CONSTRAINT search_o_assigned_to_id_1cc909cf580febcc_fk_people_db_person_id FOREIGN KEY (assigned_to_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinionscited ADD CONSTRAINT search_op_cited_opinion_id_69ef5d07ce27b76_fk_search_opinion_id FOREIGN KEY (cited_opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinioncluster_non_participating_judges ADD CONSTRAINT search_opinio_person_id_5b0da1008e3e4e3b_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinion_joined_by ADD CONSTRAINT search_opinio_person_id_5e482e9ee34284bc_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinioncluster_panel ADD CONSTRAINT search_opinio_person_id_70c55c02599cc568_fk_people_db_person_id FOREIGN KEY (person_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinion_joined_by ADD CONSTRAINT search_opinion__opinion_id_d92788377db9348_fk_search_opinion_id FOREIGN KEY (opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinion ADD CONSTRAINT search_opinion_author_id_a44f4b76b64d99c_fk_people_db_person_id FOREIGN KEY (author_id) REFERENCES public.people_db_person(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinioncluster ADD CONSTRAINT search_opinioncl_docket_id_14b37923614c0da0_fk_search_docket_id FOREIGN KEY (docket_id) REFERENCES public.search_docket(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinionscitedbyrecapdocument ADD CONSTRAINT search_opinionscited_cited_opinion_id_5f0347bb_fk_search_op FOREIGN KEY (cited_opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_opinionscitedbyrecapdocument ADD CONSTRAINT search_opinionscited_citing_document_id_c64b751b_fk_search_re FOREIGN KEY (citing_document_id) REFERENCES public.search_recapdocument(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_parenthetical ADD CONSTRAINT search_parenthetical_described_opinion_id_ddd408db_fk_search_op FOREIGN KEY (described_opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_parenthetical ADD CONSTRAINT search_parenthetical_describing_opinion_i_07864494_fk_search_op FOREIGN KEY (describing_opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_parenthetical ADD CONSTRAINT search_parenthetical_group_id_00a7def3_fk_search_pa FOREIGN KEY (group_id) REFERENCES public.search_parentheticalgroup(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_parentheticalgroup ADD CONSTRAINT search_parenthetical_opinion_id_fd6bb935_fk_search_op FOREIGN KEY (opinion_id) REFERENCES public.search_opinion(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_parentheticalgroup ADD CONSTRAINT search_parenthetical_representative_id_00e5a857_fk_search_pa FOREIGN KEY (representative_id) REFERENCES public.search_parenthetical(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.search_recapdocument_tags ADD CONSTRAINT search_recapdocument_t_tag_id_1a152aa24561fa85_fk_search_tag_id FOREIGN KEY (tag_id) REFERENCES public.search_tag(id) DEFERRABLE INITIALLY DEFERRED;
+
+-- PostgreSQL database dump complete

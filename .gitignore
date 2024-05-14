@@ -1,4 +1,11 @@
 .DS_Store
+# ignore large data files
+courtlistener/*.csv*
+
+# editor auto save files
+.#*
+
 venv/
 pgdata/
 rawdata/
+

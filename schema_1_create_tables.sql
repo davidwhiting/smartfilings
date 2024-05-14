@@ -1,11 +1,357 @@
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
+ALTER DATABASE courtlistener OWNER TO django;
+
+\connect courtlistener
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+SET default_tablespace = '';
+SET default_table_access_method = heap;
+
+----------------------------------- CREATE TABLES  -----------------------------------------------------
+
+-- Name: audio_audio
+CREATE TABLE public.audio_audio (
+    id integer NOT NULL,
+    source character varying(10) NOT NULL,
+    case_name_short text NOT NULL,
+    case_name text NOT NULL,
+    case_name_full text NOT NULL,
+    judges text,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    sha1 character varying(40) NOT NULL,
+    download_url character varying(500),
+    local_path_mp3 character varying(100) NOT NULL,
+    local_path_original_file character varying(100) NOT NULL,
+    duration smallint,
+    processing_complete boolean NOT NULL,
+    date_blocked date,
+    blocked boolean NOT NULL,
+    docket_id integer,
+    stt_google_response text NOT NULL,
+    stt_status smallint NOT NULL,
+    filepath_ia character varying(1000) NOT NULL,
+    ia_upload_failure_count smallint
+);
+ALTER TABLE public.audio_audio OWNER TO django;
+CREATE SEQUENCE public.audio_audio_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.audio_audio_id_seq OWNER TO django;
+ALTER SEQUENCE public.audio_audio_id_seq OWNED BY public.audio_audio.id;
+
+
+-- Name: audio_audio_panel
+
+CREATE TABLE public.audio_audio_panel (
+    id integer NOT NULL,
+    audio_id integer NOT NULL,
+    person_id integer NOT NULL
+);
+ALTER TABLE public.audio_audio_panel OWNER TO django;
+CREATE SEQUENCE public.audio_audio_panel_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.audio_audio_panel_id_seq OWNER TO django;
+ALTER SEQUENCE public.audio_audio_panel_id_seq OWNED BY public.audio_audio_panel.id;
+
+-- Name: audio_audioevent
+CREATE TABLE public.audio_audioevent (
+    pgh_id integer NOT NULL,
+    pgh_created_at timestamp with time zone NOT NULL,
+    pgh_label text NOT NULL,
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    source character varying(10) NOT NULL,
+    case_name_short text NOT NULL,
+    case_name text NOT NULL,
+    case_name_full text NOT NULL,
+    judges text,
+    sha1 character varying(40) NOT NULL,
+    download_url character varying(500),
+    local_path_mp3 character varying(100) NOT NULL,
+    local_path_original_file character varying(100) NOT NULL,
+    filepath_ia character varying(1000) NOT NULL,
+    ia_upload_failure_count smallint,
+    duration smallint,
+    processing_complete boolean NOT NULL,
+    date_blocked date,
+    blocked boolean NOT NULL,
+    stt_status smallint NOT NULL,
+    stt_google_response text NOT NULL,
+    docket_id integer,
+    pgh_context_id uuid,
+    pgh_obj_id integer NOT NULL
+);
+ALTER TABLE public.audio_audioevent OWNER TO django;
+CREATE SEQUENCE public.audio_audioevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.audio_audioevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.audio_audioevent_pgh_id_seq OWNED BY public.audio_audioevent.pgh_id;
+
+-- Name: audio_audiopanelevent
+CREATE TABLE public.audio_audiopanelevent (
+    pgh_id integer NOT NULL,
+    pgh_created_at timestamp with time zone NOT NULL,
+    pgh_label text NOT NULL,
+    id integer NOT NULL,
+    audio_id integer NOT NULL,
+    person_id integer NOT NULL,
+    pgh_context_id uuid
+);
+ALTER TABLE public.audio_audiopanelevent OWNER TO django;
+CREATE SEQUENCE public.audio_audiopanelevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.audio_audiopanelevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.audio_audiopanelevent_pgh_id_seq OWNED BY public.audio_audiopanelevent.pgh_id;
+
+-- Name: people_db_abarating
+CREATE TABLE public.people_db_abarating (
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    rating character varying(5) NOT NULL,
+    person_id integer,
+    year_rated smallint,
+    CONSTRAINT people_db_abarating_year_rated_check CHECK ((year_rated >= 0))
+);
+ALTER TABLE public.people_db_abarating OWNER TO django;
+CREATE SEQUENCE public.people_db_abarating_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_abarating_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_abarating_id_seq OWNED BY public.people_db_abarating.id;
+
+-- Name: people_db_abaratingevent
+CREATE TABLE public.people_db_abaratingevent (
+    pgh_id integer NOT NULL,
+    pgh_created_at timestamp with time zone NOT NULL,
+    pgh_label text NOT NULL,
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    year_rated smallint,
+    rating character varying(5) NOT NULL,
+    person_id integer,
+    pgh_context_id uuid,
+    pgh_obj_id integer NOT NULL,
+    CONSTRAINT people_db_abaratingevent_year_rated_check CHECK ((year_rated >= 0))
+);
+ALTER TABLE public.people_db_abaratingevent OWNER TO django;
+CREATE SEQUENCE public.people_db_abaratingevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_abaratingevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_abaratingevent_pgh_id_seq OWNED BY public.people_db_abaratingevent.pgh_id;
+
+-- Name: people_db_attorney
+CREATE TABLE public.people_db_attorney (
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    name text NOT NULL,
+    contact_raw text NOT NULL,
+    phone character varying(20) NOT NULL,
+    fax character varying(20) NOT NULL,
+    email character varying(254) NOT NULL
+);
+ALTER TABLE public.people_db_attorney OWNER TO django;
+CREATE SEQUENCE public.people_db_attorney_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_attorney_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_attorney_id_seq OWNED BY public.people_db_attorney.id;
+
+-- Name: people_db_attorneyorganization
+CREATE TABLE public.people_db_attorneyorganization (
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    lookup_key text NOT NULL,
+    name text NOT NULL,
+    address1 text NOT NULL,
+    address2 text NOT NULL,
+    city text NOT NULL,
+    state character varying(2) NOT NULL,
+    zip_code character varying(10) NOT NULL
+);
+ALTER TABLE public.people_db_attorneyorganization OWNER TO django;
+CREATE SEQUENCE public.people_db_attorneyorganization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_attorneyorganization_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_attorneyorganization_id_seq OWNED BY public.people_db_attorneyorganization.id;
+
+-- Name: people_db_attorneyorganizationassociation
+CREATE TABLE public.people_db_attorneyorganizationassociation (
+    id integer NOT NULL,
+    attorney_id integer NOT NULL,
+    attorney_organization_id integer NOT NULL,
+    docket_id integer NOT NULL
+);
+ALTER TABLE public.people_db_attorneyorganizationassociation OWNER TO django;
+CREATE SEQUENCE public.people_db_attorneyorganizationassociation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_attorneyorganizationassociation_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_attorneyorganizationassociation_id_seq OWNED BY public.people_db_attorneyorganizationassociation.id;
+
+-- Name: people_db_criminalcomplaint
+CREATE TABLE public.people_db_criminalcomplaint (
+    id integer NOT NULL,
+    name text NOT NULL,
+    disposition text NOT NULL,
+    party_type_id integer NOT NULL
+);
+ALTER TABLE public.people_db_criminalcomplaint OWNER TO django;
+CREATE SEQUENCE public.people_db_criminalcomplaint_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_criminalcomplaint_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_criminalcomplaint_id_seq OWNED BY public.people_db_criminalcomplaint.id;
+
+-- Name: people_db_criminalcount
+CREATE TABLE public.people_db_criminalcount (
+    id integer NOT NULL,
+    name text NOT NULL,
+    disposition text NOT NULL,
+    status smallint NOT NULL,
+    party_type_id integer NOT NULL
+);
+ALTER TABLE public.people_db_criminalcount OWNER TO django;
+CREATE SEQUENCE public.people_db_criminalcount_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_criminalcount_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_criminalcount_id_seq OWNED BY public.people_db_criminalcount.id;
+
+-- Name: people_db_education
+CREATE TABLE public.people_db_education (
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    degree_detail character varying(100) NOT NULL,
+    degree_year smallint,
+    person_id integer,
+    school_id integer NOT NULL,
+    degree_level character varying(4) NOT NULL,
+    CONSTRAINT people_db_education_degree_year_check CHECK ((degree_year >= 0))
+);
+ALTER TABLE public.people_db_education OWNER TO django;
+CREATE SEQUENCE public.people_db_education_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_education_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_education_id_seq OWNED BY public.people_db_education.id;
+
+-- Name: people_db_educationevent
+CREATE TABLE public.people_db_educationevent (
+    pgh_id integer NOT NULL,
+    pgh_created_at timestamp with time zone NOT NULL,
+    pgh_label text NOT NULL,
+    id integer NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    date_modified timestamp with time zone NOT NULL,
+    degree_level character varying(4) NOT NULL,
+    degree_detail character varying(100) NOT NULL,
+    degree_year smallint,
+    person_id integer,
+    pgh_context_id uuid,
+    pgh_obj_id integer NOT NULL,
+    school_id integer NOT NULL,
+    CONSTRAINT people_db_educationevent_degree_year_check CHECK ((degree_year >= 0))
+);
+ALTER TABLE public.people_db_educationevent OWNER TO django;
+CREATE SEQUENCE public.people_db_educationevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_educationevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_educationevent_pgh_id_seq OWNED BY public.people_db_educationevent.pgh_id;
+
+-- Name: people_db_party
 CREATE TABLE public.people_db_party (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
     date_modified timestamp with time zone NOT NULL,
     name text NOT NULL,
     extra_info text NOT NULL
-    );
+);
+ALTER TABLE public.people_db_party OWNER TO django;
+CREATE SEQUENCE public.people_db_party_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_party_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_party_id_seq OWNED BY public.people_db_party.id;
+
+-- Name: people_db_partytype
 CREATE TABLE public.people_db_partytype (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
@@ -15,7 +361,18 @@ CREATE TABLE public.people_db_partytype (
     extra_info text NOT NULL,
     highest_offense_level_opening text NOT NULL,
     highest_offense_level_terminated text NOT NULL
-    );
+);
+ALTER TABLE public.people_db_partytype OWNER TO django;
+CREATE SEQUENCE public.people_db_partytype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_partytype_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_partytype_id_seq OWNED BY public.people_db_partytype.id;
+
+-- Name: people_db_person
 CREATE TABLE public.people_db_person (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -43,12 +400,34 @@ CREATE TABLE public.people_db_person (
     date_completed timestamp with time zone,
     dob_country character varying(50) NOT NULL,
     dod_country character varying(50) NOT NULL
-    );
+);
+ALTER TABLE public.people_db_person OWNER TO django;
+CREATE SEQUENCE public.people_db_person_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_person_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_person_id_seq OWNED BY public.people_db_person.id;
+
+-- Name: people_db_person_race
 CREATE TABLE public.people_db_person_race (
     id integer NOT NULL,
     person_id integer NOT NULL,
     race_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_person_race OWNER TO django;
+CREATE SEQUENCE public.people_db_person_race_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_person_race_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_person_race_id_seq OWNED BY public.people_db_person_race.id;
+
+-- Name: people_db_personevent
 CREATE TABLE public.people_db_personevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -81,7 +460,19 @@ CREATE TABLE public.people_db_personevent (
     is_alias_of_id integer,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_personevent OWNER TO django;
+CREATE SEQUENCE public.people_db_personevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_personevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_personevent_pgh_id_seq OWNED BY public.people_db_personevent.pgh_id;
+
+-- Name: people_db_personraceevent
 CREATE TABLE public.people_db_personraceevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -90,7 +481,19 @@ CREATE TABLE public.people_db_personraceevent (
     person_id integer NOT NULL,
     pgh_context_id uuid,
     race_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_personraceevent OWNER TO django;
+CREATE SEQUENCE public.people_db_personraceevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_personraceevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_personraceevent_pgh_id_seq OWNED BY public.people_db_personraceevent.pgh_id;
+
+-- Name: people_db_politicalaffiliation
 CREATE TABLE public.people_db_politicalaffiliation (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -102,7 +505,18 @@ CREATE TABLE public.people_db_politicalaffiliation (
     date_end date,
     date_granularity_end character varying(15) NOT NULL,
     person_id integer
-    );
+);
+ALTER TABLE public.people_db_politicalaffiliation OWNER TO django;
+CREATE SEQUENCE public.people_db_politicalaffiliation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_politicalaffiliation_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_politicalaffiliation_id_seq OWNED BY public.people_db_politicalaffiliation.id;
+
+-- Name: people_db_politicalaffiliationevent
 CREATE TABLE public.people_db_politicalaffiliationevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -119,7 +533,19 @@ CREATE TABLE public.people_db_politicalaffiliationevent (
     person_id integer,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_politicalaffiliationevent OWNER TO django;
+CREATE SEQUENCE public.people_db_politicalaffiliationevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_politicalaffiliationevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_politicalaffiliationevent_pgh_id_seq OWNED BY public.people_db_politicalaffiliationevent.pgh_id;
+
+-- Name: people_db_position
 CREATE TABLE public.people_db_position (
     id integer NOT NULL,
     position_type character varying(20),
@@ -161,7 +587,18 @@ CREATE TABLE public.people_db_position (
     sector smallint,
     CONSTRAINT people_db_position_votes_no_check CHECK ((votes_no >= 0)),
     CONSTRAINT people_db_position_votes_yes_check CHECK ((votes_yes >= 0))
-    );
+);
+ALTER TABLE public.people_db_position OWNER TO django;
+CREATE SEQUENCE public.people_db_position_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_position_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_position_id_seq OWNED BY public.people_db_position.id;
+
+-- Name: people_db_positionevent; Type: TABLE; Schema: public; Owner: django
 CREATE TABLE public.people_db_positionevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -208,15 +645,34 @@ CREATE TABLE public.people_db_positionevent (
     supervisor_id integer,
     CONSTRAINT people_db_positionevent_votes_no_check CHECK ((votes_no >= 0)),
     CONSTRAINT people_db_positionevent_votes_yes_check CHECK ((votes_yes >= 0))
-    );
+);
+ALTER TABLE public.people_db_positionevent OWNER TO django;
+CREATE SEQUENCE public.people_db_positionevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_positionevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_positionevent_pgh_id_seq OWNED BY public.people_db_positionevent.pgh_id;
 
-
-
-
+-- Name: people_db_race
 CREATE TABLE public.people_db_race (
     id integer NOT NULL,
     race character varying(5) NOT NULL
-    );
+);
+ALTER TABLE public.people_db_race OWNER TO django;
+CREATE SEQUENCE public.people_db_race_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_race_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_race_id_seq OWNED BY public.people_db_race.id;
+
+-- Name: people_db_raceevent
 CREATE TABLE public.people_db_raceevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -225,7 +681,19 @@ CREATE TABLE public.people_db_raceevent (
     race character varying(5) NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_raceevent OWNER TO django;
+CREATE SEQUENCE public.people_db_raceevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_raceevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_raceevent_pgh_id_seq OWNED BY public.people_db_raceevent.pgh_id;
+
+-- Name: people_db_retentionevent
 CREATE TABLE public.people_db_retentionevent (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -241,7 +709,18 @@ CREATE TABLE public.people_db_retentionevent (
     votes_yes_percent double precision,
     CONSTRAINT people_db_retentionevent_votes_no_check CHECK ((votes_no >= 0)),
     CONSTRAINT people_db_retentionevent_votes_yes_check CHECK ((votes_yes >= 0))
-    );
+);
+ALTER TABLE public.people_db_retentionevent OWNER TO django;
+CREATE SEQUENCE public.people_db_retentionevent_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_retentionevent_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_retentionevent_id_seq OWNED BY public.people_db_retentionevent.id;
+
+-- Name: people_db_retentioneventevent
 CREATE TABLE public.people_db_retentioneventevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -262,7 +741,19 @@ CREATE TABLE public.people_db_retentioneventevent (
     position_id integer,
     CONSTRAINT people_db_retentioneventevent_votes_no_check CHECK ((votes_no >= 0)),
     CONSTRAINT people_db_retentioneventevent_votes_yes_check CHECK ((votes_yes >= 0))
-    );
+);
+ALTER TABLE public.people_db_retentioneventevent OWNER TO django;
+CREATE SEQUENCE public.people_db_retentioneventevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_retentioneventevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_retentioneventevent_pgh_id_seq OWNED BY public.people_db_retentioneventevent.pgh_id;
+
+-- Name: people_db_role
 CREATE TABLE public.people_db_role (
     id integer NOT NULL,
     role smallint,
@@ -271,7 +762,18 @@ CREATE TABLE public.people_db_role (
     docket_id integer NOT NULL,
     party_id integer NOT NULL,
     role_raw text NOT NULL
-    );
+);
+ALTER TABLE public.people_db_role OWNER TO django;
+CREATE SEQUENCE public.people_db_role_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_role_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_role_id_seq OWNED BY public.people_db_role.id;
+
+-- Name: people_db_school
 CREATE TABLE public.people_db_school (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -279,7 +781,18 @@ CREATE TABLE public.people_db_school (
     name character varying(120) NOT NULL,
     ein integer,
     is_alias_of_id integer
-    );
+);
+ALTER TABLE public.people_db_school OWNER TO django;
+CREATE SEQUENCE public.people_db_school_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_school_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_school_id_seq OWNED BY public.people_db_school.id;
+
+-- Name: people_db_schoolevent
 CREATE TABLE public.people_db_schoolevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -292,9 +805,19 @@ CREATE TABLE public.people_db_schoolevent (
     is_alias_of_id integer,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
+);
+ALTER TABLE public.people_db_schoolevent OWNER TO django;
+CREATE SEQUENCE public.people_db_schoolevent_pgh_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_schoolevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_schoolevent_pgh_id_seq OWNED BY public.people_db_schoolevent.pgh_id;
 
-
+-- Name: people_db_source
 CREATE TABLE public.people_db_source (
     id integer NOT NULL,
     date_modified timestamp with time zone NOT NULL,
@@ -303,9 +826,18 @@ CREATE TABLE public.people_db_source (
     notes text NOT NULL,
     person_id integer,
     date_created timestamp with time zone NOT NULL
-    );
+);
+ALTER TABLE public.people_db_source OWNER TO django;
+CREATE SEQUENCE public.people_db_source_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.people_db_source_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_source_id_seq OWNED BY public.people_db_source.id;
 
-
+-- Name: people_db_sourceevent
 CREATE TABLE public.people_db_sourceevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -319,8 +851,8 @@ CREATE TABLE public.people_db_sourceevent (
     person_id integer,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.people_db_sourceevent OWNER TO django;
 CREATE SEQUENCE public.people_db_sourceevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -328,7 +860,10 @@ CREATE SEQUENCE public.people_db_sourceevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.people_db_sourceevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.people_db_sourceevent_pgh_id_seq OWNED BY public.people_db_sourceevent.pgh_id;
 
+-- Name: search_bankruptcyinformation
 CREATE TABLE public.search_bankruptcyinformation (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -340,8 +875,8 @@ CREATE TABLE public.search_bankruptcyinformation (
     chapter character varying(10) NOT NULL,
     trustee_str text NOT NULL,
     docket_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_bankruptcyinformation OWNER TO django;
 CREATE SEQUENCE public.search_bankruptcyinformation_id_seq
     AS integer
     START WITH 1
@@ -349,7 +884,10 @@ CREATE SEQUENCE public.search_bankruptcyinformation_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_bankruptcyinformation_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_bankruptcyinformation_id_seq OWNED BY public.search_bankruptcyinformation.id;
 
+-- Name: search_bankruptcyinformationevent
 CREATE TABLE public.search_bankruptcyinformationevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -366,8 +904,8 @@ CREATE TABLE public.search_bankruptcyinformationevent (
     docket_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_bankruptcyinformationevent OWNER TO django;
 CREATE SEQUENCE public.search_bankruptcyinformationevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -375,7 +913,10 @@ CREATE SEQUENCE public.search_bankruptcyinformationevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_bankruptcyinformationevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_bankruptcyinformationevent_pgh_id_seq OWNED BY public.search_bankruptcyinformationevent.pgh_id;
 
+-- Name: search_citation
 CREATE TABLE public.search_citation (
     id integer NOT NULL,
     volume smallint NOT NULL,
@@ -383,15 +924,18 @@ CREATE TABLE public.search_citation (
     page text NOT NULL,
     type smallint NOT NULL,
     cluster_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_citation OWNER TO django;
 CREATE SEQUENCE public.search_citation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_citation_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_citation_id_seq OWNED BY public.search_citation.id;
 
+-- Name: search_citationevent
 CREATE TABLE public.search_citationevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -404,8 +948,8 @@ CREATE TABLE public.search_citationevent (
     cluster_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_citationevent OWNER TO django;
 CREATE SEQUENCE public.search_citationevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -413,7 +957,10 @@ CREATE SEQUENCE public.search_citationevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_citationevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_citationevent_pgh_id_seq OWNED BY public.search_citationevent.pgh_id;
 
+-- Name: search_claim
 CREATE TABLE public.search_claim (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -436,8 +983,8 @@ CREATE TABLE public.search_claim (
     description text NOT NULL,
     remarks text NOT NULL,
     docket_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claim OWNER TO django;
 CREATE SEQUENCE public.search_claim_id_seq
     AS integer
     START WITH 1
@@ -445,13 +992,16 @@ CREATE SEQUENCE public.search_claim_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claim_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claim_id_seq OWNED BY public.search_claim.id;
 
+-- Name: search_claim_tags
 CREATE TABLE public.search_claim_tags (
     id integer NOT NULL,
     claim_id integer NOT NULL,
     tag_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claim_tags OWNER TO django;
 CREATE SEQUENCE public.search_claim_tags_id_seq
     AS integer
     START WITH 1
@@ -459,7 +1009,10 @@ CREATE SEQUENCE public.search_claim_tags_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claim_tags_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claim_tags_id_seq OWNED BY public.search_claim_tags.id;
 
+-- Name: search_claimevent
 CREATE TABLE public.search_claimevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -487,8 +1040,8 @@ CREATE TABLE public.search_claimevent (
     docket_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claimevent OWNER TO django;
 CREATE SEQUENCE public.search_claimevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -496,7 +1049,10 @@ CREATE SEQUENCE public.search_claimevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claimevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claimevent_pgh_id_seq OWNED BY public.search_claimevent.pgh_id;
 
+-- Name: search_claimhistory
 CREATE TABLE public.search_claimhistory (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -525,8 +1081,8 @@ CREATE TABLE public.search_claimhistory (
     pacer_dm_id integer,
     pacer_case_id character varying(100) NOT NULL,
     claim_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claimhistory OWNER TO django;
 CREATE SEQUENCE public.search_claimhistory_id_seq
     AS integer
     START WITH 1
@@ -534,7 +1090,10 @@ CREATE SEQUENCE public.search_claimhistory_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claimhistory_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claimhistory_id_seq OWNED BY public.search_claimhistory.id;
 
+-- Name: search_claimhistoryevent
 CREATE TABLE public.search_claimhistoryevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -568,8 +1127,8 @@ CREATE TABLE public.search_claimhistoryevent (
     claim_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claimhistoryevent OWNER TO django;
 CREATE SEQUENCE public.search_claimhistoryevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -577,7 +1136,10 @@ CREATE SEQUENCE public.search_claimhistoryevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claimhistoryevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claimhistoryevent_pgh_id_seq OWNED BY public.search_claimhistoryevent.pgh_id;
 
+-- Name: search_claimtagsevent
 CREATE TABLE public.search_claimtagsevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -586,8 +1148,8 @@ CREATE TABLE public.search_claimtagsevent (
     claim_id integer NOT NULL,
     pgh_context_id uuid,
     tag_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_claimtagsevent OWNER TO django;
 CREATE SEQUENCE public.search_claimtagsevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -595,7 +1157,10 @@ CREATE SEQUENCE public.search_claimtagsevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_claimtagsevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_claimtagsevent_pgh_id_seq OWNED BY public.search_claimtagsevent.pgh_id;
 
+-- Name: search_court
 CREATE TABLE public.search_court (
     id character varying(15) NOT NULL,
     date_modified timestamp with time zone NOT NULL,
@@ -618,23 +1183,26 @@ CREATE TABLE public.search_court (
     pacer_rss_entry_types text NOT NULL,
     parent_court_id character varying(15),
     CONSTRAINT search_court_pacer_court_id_check CHECK ((pacer_court_id >= 0))
-    );
+);
+ALTER TABLE public.search_court OWNER TO django;
 
+-- Name: search_court_appeals_to
 CREATE TABLE public.search_court_appeals_to (
     id integer NOT NULL,
     from_court_id character varying(15) NOT NULL,
     to_court_id character varying(15) NOT NULL
-    );
-
-ALTER TABLE public.search_courthouse ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.search_courthouse_id_seq
+);
+ALTER TABLE public.search_court_appeals_to OWNER TO django;
+ALTER TABLE public.search_court_appeals_to ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.search_court_appeals_to_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
-    );
+);
 
+-- Name: search_courtappealstoevent
 CREATE TABLE public.search_courtappealstoevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -643,17 +1211,18 @@ CREATE TABLE public.search_courtappealstoevent (
     from_court_id character varying(15) NOT NULL,
     pgh_context_id uuid,
     to_court_id character varying(15) NOT NULL
-    );
-
-ALTER TABLE public.search_courthouseevent ALTER COLUMN pgh_id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.search_courthouseevent_pgh_id_seq
+);
+ALTER TABLE public.search_courtappealstoevent OWNER TO django;
+ALTER TABLE public.search_courtappealstoevent ALTER COLUMN pgh_id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.search_courtappealstoevent_pgh_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
-    );
+);
 
+-- Name: search_courtevent
 CREATE TABLE public.search_courtevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -681,8 +1250,8 @@ CREATE TABLE public.search_courtevent (
     pgh_obj_id character varying(15) NOT NULL,
     parent_court_id character varying(15),
     CONSTRAINT search_courtevent_pacer_court_id_check CHECK ((pacer_court_id >= 0))
-    );
-
+);
+ALTER TABLE public.search_courtevent OWNER TO django;
 CREATE SEQUENCE public.search_courtevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -690,7 +1259,10 @@ CREATE SEQUENCE public.search_courtevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_courtevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_courtevent_pgh_id_seq OWNED BY public.search_courtevent.pgh_id;
 
+-- Name: search_courthouse
 CREATE TABLE public.search_courthouse (
     id integer NOT NULL,
     court_seat boolean,
@@ -703,12 +1275,9 @@ CREATE TABLE public.search_courthouse (
     zip_code character varying(10) NOT NULL,
     country_code text NOT NULL,
     court_id character varying(15) NOT NULL
-    );
-
-
----- done through here
----- some fixing to do below
-
+);
+ALTER TABLE public.search_courthouse OWNER TO django;
+ALTER TABLE public.search_courthouse ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.search_courthouse_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -717,8 +1286,7 @@ CREATE TABLE public.search_courthouse (
     CACHE 1
 );
 
-
-
+-- Name: search_courthouseevent
 CREATE TABLE public.search_courthouseevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -737,8 +1305,8 @@ CREATE TABLE public.search_courthouseevent (
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
 );
-
-
+ALTER TABLE public.search_courthouseevent OWNER TO django;
+ALTER TABLE public.search_courthouseevent ALTER COLUMN pgh_id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.search_courthouseevent_pgh_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -747,8 +1315,7 @@ CREATE TABLE public.search_courthouseevent (
     CACHE 1
 );
 
-
-
+-- Name: search_docket
 CREATE TABLE public.search_docket (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -796,50 +1363,50 @@ CREATE TABLE public.search_docket (
     ia_upload_failure_count smallint,
     docket_number_core character varying(20) NOT NULL,
     idb_data_id integer
-    );
-
-
+);
+ALTER TABLE public.search_docket OWNER TO django;
 CREATE SEQUENCE public.search_docket_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docket_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docket_id_seq OWNED BY public.search_docket.id;
 
-
-
+-- Name: search_docket_panel
 CREATE TABLE public.search_docket_panel (
     id integer NOT NULL,
     docket_id integer NOT NULL,
     person_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_docket_panel OWNER TO django;
 CREATE SEQUENCE public.search_docket_panel_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docket_panel_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docket_panel_id_seq OWNED BY public.search_docket_panel.id;
 
-
-
+-- Name: search_docket_tags
 CREATE TABLE public.search_docket_tags (
     id integer NOT NULL,
     docket_id integer NOT NULL,
     tag_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_docket_tags OWNER TO django;
 CREATE SEQUENCE public.search_docket_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docket_tags_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docket_tags_id_seq OWNED BY public.search_docket_tags.id;
 
-
-
+-- Name: search_docketentry
 CREATE TABLE public.search_docketentry (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -851,34 +1418,34 @@ CREATE TABLE public.search_docketentry (
     pacer_sequence_number integer,
     recap_sequence_number character varying(50) NOT NULL,
     time_filed time without time zone
-    );
-
-
+);
+ALTER TABLE public.search_docketentry OWNER TO django;
 CREATE SEQUENCE public.search_docketentry_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketentry_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketentry_id_seq OWNED BY public.search_docketentry.id;
 
-
-
+-- Name: search_docketentry_tags
 CREATE TABLE public.search_docketentry_tags (
     id integer NOT NULL,
     docketentry_id integer NOT NULL,
     tag_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_docketentry_tags OWNER TO django;
 CREATE SEQUENCE public.search_docketentry_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketentry_tags_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketentry_tags_id_seq OWNED BY public.search_docketentry_tags.id;
 
-
-
+-- Name: search_docketentryevent
 CREATE TABLE public.search_docketentryevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -895,9 +1462,8 @@ CREATE TABLE public.search_docketentryevent (
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL,
     time_filed time without time zone
-    );
-
-
+);
+ALTER TABLE public.search_docketentryevent OWNER TO django;
 CREATE SEQUENCE public.search_docketentryevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -905,9 +1471,10 @@ CREATE SEQUENCE public.search_docketentryevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketentryevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketentryevent_pgh_id_seq OWNED BY public.search_docketentryevent.pgh_id;
 
-
-
+-- Name: search_docketentrytagsevent
 CREATE TABLE public.search_docketentrytagsevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -916,9 +1483,8 @@ CREATE TABLE public.search_docketentrytagsevent (
     docketentry_id integer NOT NULL,
     pgh_context_id uuid,
     tag_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_docketentrytagsevent OWNER TO django;
 CREATE SEQUENCE public.search_docketentrytagsevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -926,9 +1492,10 @@ CREATE SEQUENCE public.search_docketentrytagsevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketentrytagsevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketentrytagsevent_pgh_id_seq OWNED BY public.search_docketentrytagsevent.pgh_id;
 
-
-
+-- Name: search_docketevent
 CREATE TABLE public.search_docketevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -980,9 +1547,8 @@ CREATE TABLE public.search_docketevent (
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL,
     referred_to_id integer
-    );
-
-
+);
+ALTER TABLE public.search_docketevent OWNER TO django;
 CREATE SEQUENCE public.search_docketevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -990,9 +1556,10 @@ CREATE SEQUENCE public.search_docketevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketevent_pgh_id_seq OWNED BY public.search_docketevent.pgh_id;
 
-
-
+-- Name: search_docketpanelevent
 CREATE TABLE public.search_docketpanelevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1001,9 +1568,8 @@ CREATE TABLE public.search_docketpanelevent (
     docket_id integer NOT NULL,
     person_id integer NOT NULL,
     pgh_context_id uuid
-    );
-
-
+);
+ALTER TABLE public.search_docketpanelevent OWNER TO django;
 CREATE SEQUENCE public.search_docketpanelevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1011,9 +1577,10 @@ CREATE SEQUENCE public.search_docketpanelevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_docketpanelevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_docketpanelevent_pgh_id_seq OWNED BY public.search_docketpanelevent.pgh_id;
 
-
-
+-- Name: search_dockettagsevent
 CREATE TABLE public.search_dockettagsevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1022,9 +1589,8 @@ CREATE TABLE public.search_dockettagsevent (
     docket_id integer NOT NULL,
     pgh_context_id uuid,
     tag_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_dockettagsevent OWNER TO django;
 CREATE SEQUENCE public.search_dockettagsevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1032,9 +1598,10 @@ CREATE SEQUENCE public.search_dockettagsevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_dockettagsevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_dockettagsevent_pgh_id_seq OWNED BY public.search_dockettagsevent.pgh_id;
 
-
-
+-- Name: search_opinion
 CREATE TABLE public.search_opinion (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -1057,34 +1624,34 @@ CREATE TABLE public.search_opinion (
     joined_by_str text NOT NULL,
     xml_harvard text NOT NULL,
     html_anon_2020 text NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinion OWNER TO django;
 CREATE SEQUENCE public.search_opinion_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinion_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinion_id_seq OWNED BY public.search_opinion.id;
 
-
-
+-- Name: search_opinion_joined_by
 CREATE TABLE public.search_opinion_joined_by (
     id integer NOT NULL,
     opinion_id integer NOT NULL,
     person_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinion_joined_by OWNER TO django;
 CREATE SEQUENCE public.search_opinion_joined_by_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinion_joined_by_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinion_joined_by_id_seq OWNED BY public.search_opinion_joined_by.id;
 
-
-
+-- Name: search_opinioncluster
 CREATE TABLE public.search_opinioncluster (
     id integer NOT NULL,
     judges text NOT NULL,
@@ -1121,50 +1688,50 @@ CREATE TABLE public.search_opinioncluster (
     summary text NOT NULL,
     arguments text NOT NULL,
     headmatter text NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinioncluster OWNER TO django;
 CREATE SEQUENCE public.search_opinioncluster_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinioncluster_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinioncluster_id_seq OWNED BY public.search_opinioncluster.id;
 
-
-
+-- Name: search_opinioncluster_non_participating_judges
 CREATE TABLE public.search_opinioncluster_non_participating_judges (
     id integer NOT NULL,
     opinioncluster_id integer NOT NULL,
     person_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinioncluster_non_participating_judges OWNER TO django;
 CREATE SEQUENCE public.search_opinioncluster_non_participating_judges_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinioncluster_non_participating_judges_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinioncluster_non_participating_judges_id_seq OWNED BY public.search_opinioncluster_non_participating_judges.id;
 
-
-
+-- Name: search_opinioncluster_panel
 CREATE TABLE public.search_opinioncluster_panel (
     id integer NOT NULL,
     opinioncluster_id integer NOT NULL,
     person_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinioncluster_panel OWNER TO django;
 CREATE SEQUENCE public.search_opinioncluster_panel_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinioncluster_panel_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinioncluster_panel_id_seq OWNED BY public.search_opinioncluster_panel.id;
 
-
-
+-- Name: search_opinionclusterevent
 CREATE TABLE public.search_opinionclusterevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1206,9 +1773,8 @@ CREATE TABLE public.search_opinionclusterevent (
     pgh_obj_id integer NOT NULL,
     arguments text NOT NULL,
     headmatter text NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinionclusterevent OWNER TO django;
 CREATE SEQUENCE public.search_opinionclusterevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1216,9 +1782,10 @@ CREATE SEQUENCE public.search_opinionclusterevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionclusterevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionclusterevent_pgh_id_seq OWNED BY public.search_opinionclusterevent.pgh_id;
 
-
-
+-- Name: search_opinionclusternonparticipatingjudgesevent
 CREATE TABLE public.search_opinionclusternonparticipatingjudgesevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1227,9 +1794,8 @@ CREATE TABLE public.search_opinionclusternonparticipatingjudgesevent (
     opinioncluster_id integer NOT NULL,
     person_id integer NOT NULL,
     pgh_context_id uuid
-    );
-
-
+);
+ALTER TABLE public.search_opinionclusternonparticipatingjudgesevent OWNER TO django;
 CREATE SEQUENCE public.search_opinionclusternonparticipatingjudgesevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1237,9 +1803,10 @@ CREATE SEQUENCE public.search_opinionclusternonparticipatingjudgesevent_pgh_id_s
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionclusternonparticipatingjudgesevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionclusternonparticipatingjudgesevent_pgh_id_seq OWNED BY public.search_opinionclusternonparticipatingjudgesevent.pgh_id;
 
-
-
+-- Name: search_opinionclusterpanelevent
 CREATE TABLE public.search_opinionclusterpanelevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1248,9 +1815,8 @@ CREATE TABLE public.search_opinionclusterpanelevent (
     opinioncluster_id integer NOT NULL,
     person_id integer NOT NULL,
     pgh_context_id uuid
-    );
-
-
+);
+ALTER TABLE public.search_opinionclusterpanelevent OWNER TO django;
 CREATE SEQUENCE public.search_opinionclusterpanelevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1258,9 +1824,10 @@ CREATE SEQUENCE public.search_opinionclusterpanelevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionclusterpanelevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionclusterpanelevent_pgh_id_seq OWNED BY public.search_opinionclusterpanelevent.pgh_id;
 
-
-
+-- Name: search_opinionevent
 CREATE TABLE public.search_opinionevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1288,9 +1855,8 @@ CREATE TABLE public.search_opinionevent (
     cluster_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinionevent OWNER TO django;
 CREATE SEQUENCE public.search_opinionevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1298,9 +1864,10 @@ CREATE SEQUENCE public.search_opinionevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionevent_pgh_id_seq OWNED BY public.search_opinionevent.pgh_id;
 
-
-
+-- Name: search_opinionjoinedbyevent
 CREATE TABLE public.search_opinionjoinedbyevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1309,9 +1876,8 @@ CREATE TABLE public.search_opinionjoinedbyevent (
     opinion_id integer NOT NULL,
     person_id integer NOT NULL,
     pgh_context_id uuid
-    );
-
-
+);
+ALTER TABLE public.search_opinionjoinedbyevent OWNER TO django;
 CREATE SEQUENCE public.search_opinionjoinedbyevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1319,34 +1885,34 @@ CREATE SEQUENCE public.search_opinionjoinedbyevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionjoinedbyevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionjoinedbyevent_pgh_id_seq OWNED BY public.search_opinionjoinedbyevent.pgh_id;
 
-
-
+-- Name: search_opinionscited
 CREATE TABLE public.search_opinionscited (
     id integer NOT NULL,
     cited_opinion_id integer NOT NULL,
     citing_opinion_id integer NOT NULL,
     depth integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinionscited OWNER TO django;
 CREATE SEQUENCE public.search_opinionscited_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionscited_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionscited_id_seq OWNED BY public.search_opinionscited.id;
 
-
-
+-- Name: search_opinionscitedbyrecapdocument
 CREATE TABLE public.search_opinionscitedbyrecapdocument (
     id integer NOT NULL,
     depth integer NOT NULL,
     cited_opinion_id integer NOT NULL,
     citing_document_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_opinionscitedbyrecapdocument OWNER TO django;
 CREATE SEQUENCE public.search_opinionscitedbyrecapdocument_id_seq
     AS integer
     START WITH 1
@@ -1354,9 +1920,10 @@ CREATE SEQUENCE public.search_opinionscitedbyrecapdocument_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_opinionscitedbyrecapdocument_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_opinionscitedbyrecapdocument_id_seq OWNED BY public.search_opinionscitedbyrecapdocument.id;
 
-
-
+-- Name: search_originatingcourtinformation
 CREATE TABLE public.search_originatingcourtinformation (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -1373,18 +1940,18 @@ CREATE TABLE public.search_originatingcourtinformation (
     docket_number text NOT NULL,
     ordering_judge_id integer,
     ordering_judge_str text NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_originatingcourtinformation OWNER TO django;
 CREATE SEQUENCE public.search_originatingcourtinformation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_originatingcourtinformation_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_originatingcourtinformation_id_seq OWNED BY public.search_originatingcourtinformation.id;
 
-
-
+-- Name: search_originatingcourtinformationevent
 CREATE TABLE public.search_originatingcourtinformationevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1406,9 +1973,8 @@ CREATE TABLE public.search_originatingcourtinformationevent (
     ordering_judge_id integer,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_originatingcourtinformationevent OWNER TO django;
 CREATE SEQUENCE public.search_originatingcourtinformationevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1416,9 +1982,10 @@ CREATE SEQUENCE public.search_originatingcourtinformationevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_originatingcourtinformationevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_originatingcourtinformationevent_pgh_id_seq OWNED BY public.search_originatingcourtinformationevent.pgh_id;
 
-
-
+-- Name: search_parenthetical
 CREATE TABLE public.search_parenthetical (
     id integer NOT NULL,
     text text NOT NULL,
@@ -1426,9 +1993,8 @@ CREATE TABLE public.search_parenthetical (
     described_opinion_id integer NOT NULL,
     describing_opinion_id integer NOT NULL,
     group_id integer
-    );
-
-
+);
+ALTER TABLE public.search_parenthetical OWNER TO django;
 CREATE SEQUENCE public.search_parenthetical_id_seq
     AS integer
     START WITH 1
@@ -1436,18 +2002,18 @@ CREATE SEQUENCE public.search_parenthetical_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_parenthetical_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_parenthetical_id_seq OWNED BY public.search_parenthetical.id;
 
-
-
+-- Name: search_parentheticalgroup
 CREATE TABLE public.search_parentheticalgroup (
     id integer NOT NULL,
     score double precision NOT NULL,
     size integer NOT NULL,
     opinion_id integer NOT NULL,
     representative_id integer NOT NULL
-    );
-
-
+);
+ALTER TABLE public.search_parentheticalgroup OWNER TO django;
 CREATE SEQUENCE public.search_parentheticalgroup_id_seq
     AS integer
     START WITH 1
@@ -1455,7 +2021,10 @@ CREATE SEQUENCE public.search_parentheticalgroup_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_parentheticalgroup_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_parentheticalgroup_id_seq OWNED BY public.search_parentheticalgroup.id;
 
+-- Name: search_recapdocument
 CREATE TABLE public.search_recapdocument (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
@@ -1480,28 +2049,34 @@ CREATE TABLE public.search_recapdocument (
     thumbnail character varying(100),
     thumbnail_status smallint NOT NULL,
     is_sealed boolean
-    );
-
+);
+ALTER TABLE public.search_recapdocument OWNER TO django;
 CREATE SEQUENCE public.search_recapdocument_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_recapdocument_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_recapdocument_id_seq OWNED BY public.search_recapdocument.id;
 
+-- Name: search_recapdocument_tags
 CREATE TABLE public.search_recapdocument_tags (
     id integer NOT NULL,
     recapdocument_id integer NOT NULL,
     tag_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_recapdocument_tags OWNER TO django;
 CREATE SEQUENCE public.search_recapdocument_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_recapdocument_tags_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_recapdocument_tags_id_seq OWNED BY public.search_recapdocument_tags.id;
 
+-- Name: search_recapdocumentevent
 CREATE TABLE public.search_recapdocumentevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1531,8 +2106,8 @@ CREATE TABLE public.search_recapdocumentevent (
     docket_entry_id integer NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_recapdocumentevent OWNER TO django;
 CREATE SEQUENCE public.search_recapdocumentevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1540,7 +2115,10 @@ CREATE SEQUENCE public.search_recapdocumentevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_recapdocumentevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_recapdocumentevent_pgh_id_seq OWNED BY public.search_recapdocumentevent.pgh_id;
 
+-- Name: search_recapdocumenttagsevent
 CREATE TABLE public.search_recapdocumenttagsevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1549,8 +2127,8 @@ CREATE TABLE public.search_recapdocumenttagsevent (
     pgh_context_id uuid,
     recapdocument_id integer NOT NULL,
     tag_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_recapdocumenttagsevent OWNER TO django;
 CREATE SEQUENCE public.search_recapdocumenttagsevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1558,21 +2136,27 @@ CREATE SEQUENCE public.search_recapdocumenttagsevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_recapdocumenttagsevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_recapdocumenttagsevent_pgh_id_seq OWNED BY public.search_recapdocumenttagsevent.pgh_id;
 
+-- Name: search_tag
 CREATE TABLE public.search_tag (
     id integer NOT NULL,
     date_created timestamp with time zone NOT NULL,
     date_modified timestamp with time zone NOT NULL,
     name character varying(50) NOT NULL
-    );
-
+);
+ALTER TABLE public.search_tag OWNER TO django;
 CREATE SEQUENCE public.search_tag_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_tag_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_tag_id_seq OWNED BY public.search_tag.id;
 
+-- Name: search_tagevent
 CREATE TABLE public.search_tagevent (
     pgh_id integer NOT NULL,
     pgh_created_at timestamp with time zone NOT NULL,
@@ -1583,8 +2167,8 @@ CREATE TABLE public.search_tagevent (
     name character varying(50) NOT NULL,
     pgh_context_id uuid,
     pgh_obj_id integer NOT NULL
-    );
-
+);
+ALTER TABLE public.search_tagevent OWNER TO django;
 CREATE SEQUENCE public.search_tagevent_pgh_id_seq
     AS integer
     START WITH 1
@@ -1592,3 +2176,5 @@ CREATE SEQUENCE public.search_tagevent_pgh_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+ALTER SEQUENCE public.search_tagevent_pgh_id_seq OWNER TO django;
+ALTER SEQUENCE public.search_tagevent_pgh_id_seq OWNED BY public.search_tagevent.pgh_id;
