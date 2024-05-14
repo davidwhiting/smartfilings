@@ -1,0 +1,7 @@
+# editor auto save files
+.#*
+
+# ignore large data files
+courtlistener/*.csv*
+
+
