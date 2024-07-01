@@ -21,17 +21,17 @@ export PGPASSWORD=$BULK_DB_PASSWORD
 #echo "Loading schema to database: schema-2023-12-05.sql"
 #psql -f "$BULK_DIR"/schema-2023-12-05.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
 
-export BULK_DIR=/Volumes/aspen_cove/data
+export BULK_DIR=/Volumes/aspen_cove/smartfilings/courtlistener
 
 echo "Loading schema to database: schema_1_create_tables.sql"
 psql -f "$BULK_DIR"/schema_1_create_tables.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
 
-echo "Loading schema to database: schema_2_set_primary_unique_keys.sql"
-psql -f "$BULK_DIR"/schema_2_set_primary_unique_keys.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
-
-echo "Loading schema to database: schema_3_create_index.sql"
-psql -f "$BULK_DIR"/schema_3_create_index.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
-
+#echo "Loading schema to database: schema_2_set_primary_unique_keys.sql"
+#psql -f "$BULK_DIR"/schema_2_set_primary_unique_keys.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
+#
+#echo "Loading schema to database: schema_3_create_index.sql"
+#psql -f "$BULK_DIR"/schema_3_create_index.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
+#
 #echo "Loading schema to database: schema_4_set_default.sql"
 #psql -f "$BULK_DIR"/schema_4_set_default.sql --host "$BULK_DB_HOST" --username "$BULK_DB_USER"
 #
